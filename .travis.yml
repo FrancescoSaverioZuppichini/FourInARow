@@ -1,4 +1,4 @@
 language: c
 install: true
 compiler: gcc
-script: scons
+script: gcc fourinarow.c game.c -o fourinarow 
