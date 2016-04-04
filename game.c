@@ -8,9 +8,6 @@
 
 #include "game.h"
 
-/* This global variable holds all the data about the current game
- look at the header for more informations about game */
-
 void free_all(struct game *myGame){
     /* free all memory */
     free(myGame->moves);
@@ -90,12 +87,12 @@ int parse_and_set_rowXcolumn(struct game *myGame, char *info){
 }
 
 /* This function initiliazed the table as a 2D array of empty space */
-void initiliaze_table(struct game *myGame){
+void initiliaze_table(struct game *myGame,struct state *s){
     int i,j;
     
     for (i = 0; i < myGame->rows; i++) {
         for (j = 0; j < myGame->columns; j++) {
-            myGame->state.table[i][j] = ' ';
+            s->table[i][j] = ' ';
         }
     }
     
@@ -107,29 +104,29 @@ int is_big_enough(){
     return 1;
 }
 
-int create_table(struct game *myGame){
+int create_table(struct game *myGame, struct state *s){
     int i;
     
     /* allocate memory for the 2d array */
-    myGame->state.table = malloc(myGame->rows * sizeof(char *));
+    s->table = malloc(myGame->rows * sizeof(char *));
     
-    if(myGame->state.table == NULL){
+    if(s->table == NULL){
         return 0;
     }
     
     /* allocate memory for the columns */
     for (i = 0; i < myGame->rows; i++) {
-        myGame->state.table[i] = malloc(myGame->columns * sizeof(char));
+        s->table[i] = malloc(myGame->columns * sizeof(char));
     }
     
     /* initialize the table with empty space */
-    initiliaze_table(myGame);
+    initiliaze_table(myGame,s);
     return 1;
 }
 
 /* This function setup the table */
 int  setup_table(struct game *myGame, char *info){
-    
+    struct state s;
     /* this is used to check valid players' moves */
     myGame->max_input = (int) strlen(info);
     /* check and set the info into myGame */
@@ -141,9 +138,9 @@ int  setup_table(struct game *myGame, char *info){
         return 0;
     }
     /* used myGame.rows and columns in order to create the 2D array*/
-    if (!create_table(myGame))
+    if (!create_table(myGame,&s))
         return 0;
-    
+    myGame->state = s;
     return 1;
 }
 
@@ -324,35 +321,49 @@ void update_current_player(struct game *myGame){
     myGame->current_player %= strlen(myGame->players);
 }
 
+void store_curr_player(struct game *myGame, struct move *currMove){
+    
+    currMove->player = myGame->players[myGame->current_player];
+    update_current_player(myGame);
+
+}
+
 /* This function update the state of the game */
 void game_update(struct game *myGame, struct move *currMove){
     /* up to here the move is valid */
-    
     /* store the player */
-    currMove->player = myGame->players[myGame->current_player];
-    update_current_player(myGame);
+    store_curr_player(myGame, currMove);
     /* update the state */
     myGame->state.table[currMove->row - 1][currMove->column - 1] = currMove->player;
     
 }
 
-void copy_state(struct state *dst, const struct state *src){
+/* Deep copy of two states */
+void copy_state(struct state *dst, const struct state *src, struct game *myGame){
+    int i,j;
     
-    
-    
-    
+    for (i = 0; i < myGame->rows; i++) {
+        for (j = 0; j < myGame->columns; j++) {
+            dst->table[i][j] = src->table[i][j];
+        }
+    }
 
+    
 }
 
-/* In reality no need to return nothing, the move is valid */
-int game_state_transition(const struct state *s0, struct move *currMove, struct state *s1,struct game *myGame){
-    /* up to here the move is valid */
-    
+/* In reality no need to return nothing, the move was already checked  */
+int game_state_transition(const struct state *s0, struct move *currMove, struct state *s1, struct game *myGame){
     /* store the player */
-    currMove->player = myGame->players[myGame->current_player];
-    update_current_player(myGame);
-    
-    
+    store_curr_player(myGame, currMove);
+    /* create s1 */
+    create_table(myGame,s1);
+    /* copy s0 into s1*/
+    copy_state(s1,s0,myGame);
+    /* free old state */
+    free(s0->table);
+    /* update the new state */
+    myGame->state = *s1;
+    myGame->state.table[currMove->row - 1][currMove->column - 1] = currMove->player;
     return 0;
     
 }
@@ -519,11 +530,13 @@ int is_finish(struct game *myGame, struct move *currMove){
 /* This function ask a moves, save it, apply it and return 0 if the game is finish (won or tie) */
 int next_move(struct game *myGame){
     struct move currMove;
-
+    /* this is need for game_state_transtiction */
+//    struct state s1;
     printf("Player: %c\n", myGame->players[myGame->current_player]);
     /* continue to ask until the move is correct */
     while(!move_is_valid(myGame, &currMove));
     game_update(myGame, &currMove);
+//    game_state_transition(&myGame->state, &currMove, &s1, myGame);
     /* update the moves history */
 //    TODO this can be used as history replay mode
 //    if(update_moves(&currMove) !=0)

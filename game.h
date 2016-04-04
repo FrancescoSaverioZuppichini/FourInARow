@@ -36,7 +36,7 @@ struct move {
     int row;
     int column;
 };
-
+/* This structure is passed almost everywhere in the functions, it holds everything we need to know about the current game */
 struct game{
     /* The game's players */
     char *players;
