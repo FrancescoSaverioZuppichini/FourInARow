@@ -1,5 +1,4 @@
 language: c
 install: true
-compiler:
-  - clang
-  - gcc
+compiler: gcc
+script: scons
