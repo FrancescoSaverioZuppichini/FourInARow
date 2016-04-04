@@ -319,17 +319,22 @@ int store_move_in_table(char *currMoveString, struct move *currMove ){
     return 1;
 }
 
+void update_current_player(){
+    /* point to the next one */
+    myGame.current_player++;
+    myGame.current_player %= strlen(myGame.players);
+}
+
 /* This function update the state of the game */
 void game_update(struct move *currMove){
     /* store the player */
     currMove->player = myGame.players[myGame.current_player];
-    /* point to the next one */
-    myGame.current_player++;
-    myGame.current_player %= strlen(myGame.players);
+    update_current_player();
     /* update the state */
     myGame.state.table[currMove->row - 1][currMove->column - 1] = currMove->player;
     
 }
+
 
 /* This function will ALWAYS return 1 if the move is invalid */
 int move_is_valid(struct move *currMove){
@@ -356,7 +361,7 @@ int move_is_valid(struct move *currMove){
     return store_move_in_table(currMoveString,currMove);
 }
 
-
+/* This is not used for now */
 int update_moves(struct move * currMove){
     static int idx = 0;
     static int cap = MIN_MOVE;
@@ -473,8 +478,7 @@ int is_finish(struct move *currMove){
     
     /* at this point the flag can have a value in [0...3]
      if it is > 0 it means that one of the check function returns 1
-     thus there is a winner
-     */
+     thus there is a winner */
     if (winner_flag > 0) {
         /* set the winner */
         myGame.winner  = currMove->player;
@@ -497,8 +501,7 @@ int next_move(){
 
     printf("Player: %c\n", myGame.players[myGame.current_player]);
     /* continue to ask until the move is correct */
-    while(!move_is_valid(&currMove)){
-    };
+    while(!move_is_valid(&currMove));
     game_update(&currMove);
     /* update the moves history */
 //    TODO this can be used as history replay mode
