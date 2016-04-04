@@ -1,4 +1,6 @@
 language: c
 install: true
 compiler: gcc
-script: gcc fourinarow.c game.c -o fourinarow 
+script:
+  -gcc fourinarow.c game.c -o fourinarow
+  -./fourinarow
