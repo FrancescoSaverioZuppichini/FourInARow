@@ -11,7 +11,7 @@
 
 /* It makes more sense to return 1 as correct output and 0 as incorrect ouput. Why you may ask?
  In c language program the number 1 is interpreted as true and 0 as false, thus checking condition in a condition flow will
- result more readible and less confusing. 8*/
+ result more readible and less confusing. */
 
 #include <stdio.h>
 #include <stdlib.h>
