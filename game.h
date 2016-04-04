@@ -61,11 +61,11 @@ struct game{
     
 };
 /* This function setup a game, it checks the inputs and stores the player and creates a table*/
-int game_setup(int argc, const char *argv[]);
+int game_setup(int argc, const char *argv[],struct game *myGame);
 /* This function asks for a new move and update the game. It return 1 if a new move can be asked, 0 if the game is finished */
-int next_move(void);
+int next_move(struct game *myGame);
 /* This function free all the memory and say bye */
-void free_all(void);
+void free_all(struct game *myGame);
 
 
 #endif /* game_h */
