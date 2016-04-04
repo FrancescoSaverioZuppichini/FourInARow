@@ -101,7 +101,8 @@ void initiliaze_table(){
     }
     
 }
-/* check if the table is too small */int is_big_enough(){
+/* check if the table is too small */
+int is_big_enough(){
 // TODO find the correct formulat to do that
 //    return myGame.rows * myGame.columns >= 4 * strlen(myGame.players) ;
     return 1;
@@ -470,8 +471,8 @@ int is_finish(struct move *currMove){
     winner_flag += check_same_line(currMove);
     winner_flag += check_diagonal(currMove);
     
-    /* at this point the flag can have a value in [0...1]
-     if it is >0 it means that one of the check function returns 1
+    /* at this point the flag can have a value in [0...3]
+     if it is > 0 it means that one of the check function returns 1
      thus there is a winner
      */
     if (winner_flag > 0) {
@@ -485,10 +486,11 @@ int is_finish(struct move *currMove){
         puts("Tie !");
         return 1;
     };
-    /* no winner, the match can goin on */
+    /* no winner, the match can continue */
     return 0;
     
 }
+
 /* This function ask a moves, save it, apply it and return 0 if the game is finish (won or tie) */
 int next_move(){
     struct move currMove;
