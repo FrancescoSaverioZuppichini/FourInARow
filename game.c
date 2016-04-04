@@ -13,7 +13,7 @@ void free_all(struct game *myGame){
     free(myGame->moves);
     free(myGame->players);
     free(myGame->state.table);
-    /* we are kind :) */
+    /* we are kind and we say bye bye :) */
     NEW_LINE;
     puts("Bye and thank you for playing :)");
     
@@ -40,7 +40,7 @@ int my_atoi(const char *to_convert){
 }
 
 /* This function parses a string input in a form of <rowXcolumn> (e.g "5x5").
- The signature doens't need any 'struct game' thus we can use it for further implementations */
+ the signature doens't need any 'struct game' thus we can use it for further implementations */
 int parse_rowXcolumn(char *rowXcolumn, int *r, int *c){
     /* will holds the strtok returns */
     char *temp;
