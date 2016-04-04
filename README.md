@@ -1,4 +1,4 @@
-# FourInARow
+# FourInARow [![Build Status](https://travis-ci.org/FrancescoSaverioZuppichini/FourInARow.svg?branch=master)](https://travis-ci.org/FrancescoSaverioZuppichini/FourInARow)
 ## C implementation of the famous *four in a row* game
 #### *By Francesco Saverio Zuppichini*
 
