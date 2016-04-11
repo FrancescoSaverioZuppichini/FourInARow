@@ -165,7 +165,7 @@ int copy_dynamically(char dst[], const char src[], int cap){
     
     for (i = 0; i < strlen(src); i++) {
         
-        if(i > cap){
+        if(i >= cap){
             
             cap = i*2;
             dst = realloc(dst, sizeof(char) * cap);
